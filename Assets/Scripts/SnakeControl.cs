@@ -1,66 +1,49 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class SnakeControl : MonoBehaviour
 {
-    [SerializeField] float speed = 3;
-    [SerializeField] float positionYTargetCorrectorSpeed = 0.3f;
+    [SerializeField] float speed = 25f;
     [SerializeField] private Camera cam;
-
     [SerializeField] private bool isMove = true;
-
-    private Vector3 position;
-    private Rigidbody headRb;
-
-    public float smoothTime = 0.1F;
-    private Vector3 velocity = Vector3.zero;
 
     [Header("Position on road")]
     [SerializeField] private float minX = -10f;
     [SerializeField] private float maxX = 10f;
 
+    private float smoothTime = 0.09f;
+    private float positionYTargetCorrector;
+    private Vector3 velocity = Vector3.zero;
+    private Transform _transform;
+
+
+    private void Awake()
+    {
+        _transform = transform;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-        headRb = GetComponent<Rigidbody>();
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        // MoveByKeyboard();
-        // Move();
         MoveByRayCast();
-    }
-
-    void Move()
-    {
-        //TODO make for touchControl
-        if(Input.GetMouseButton(0))
-        {
-            var mousePosition = Input.mousePosition;
-            Debug.Log(mousePosition);
-            var position = cam.ScreenToWorldPoint(Input.mousePosition);
-            Debug.Log(position);
-            var targetPosition = new Vector3(position.x, transform.position.y + 1f, 1f);
-            // Debug.Log(targetPosition);
-            transform.position = Vector3.MoveTowards(transform.position, targetPosition, Time.deltaTime * speed);
-        }
-    }
-
-    void MoveByKeyboard()
-    {
-        float moveHorizontal = Input.GetAxis ("Horizontal");
-        headRb.velocity = new Vector3(moveHorizontal, 0, 1) * speed;
     }
 
     void MoveByRayCast()
     {
         if (isMove != true) return;
 
-        Vector3 targetPosition = new Vector3(transform.position.x, transform.position.y + positionYTargetCorrectorSpeed, transform.position.z);
-
+        positionYTargetCorrector = speed * smoothTime;
+        Vector3 targetPosition = new Vector3(_transform.position.x, _transform.position.y + positionYTargetCorrector, _transform.position.z);
+        //TODO добавить ввод с тача
         if(Input.GetMouseButton(0))
         {
             RaycastHit hit;
@@ -70,13 +53,27 @@ public class SnakeControl : MonoBehaviour
             {
                 var hitPosition = hit.point;
                 float xPos = Mathf.Clamp(hitPosition.x, minX, maxX);
-                targetPosition = new Vector3(xPos, transform.position.y + positionYTargetCorrectorSpeed, transform.position.z);
+                targetPosition = new Vector3(xPos, _transform.position.y + positionYTargetCorrector, _transform.position.z);
             }
         }
-        // transform.position = Vector3.MoveTowards(transform.position, targetPosition, Time.deltaTime * speed);
-        transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, smoothTime);
-        transform.LookAt(targetPosition);
 
+        _transform.position = Vector3.SmoothDamp(_transform.position, targetPosition, ref velocity, smoothTime);
+
+        //TODO откорректировать поворот к цели
+        _transform.LookAt(targetPosition, new Vector3(0, 0, -1));
+        // Vector3 lookAtPosition = new Vector3(targetPosition.x, targetPosition.x, targetPosition.z);
+        // _transform.LookAt(lookAtPosition);
+
+        // var dir = targetPosition - _transform.position;
+        // Quaternion LookAtRotation = Quaternion.LookRotation(dir);
+        //
+        // Quaternion LookAtRotationOnly_Y = Quaternion.Euler(LookAtRotation.eulerAngles.x, transform.rotation.eulerAngles.y, LookAtRotation.eulerAngles.z);
+        // transform.rotation = LookAtRotationOnly_Y;
+    }
+
+    public void SetIsMove(bool move)
+    {
+        isMove = move;
     }
 
 
