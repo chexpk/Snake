@@ -7,6 +7,7 @@ public class SnakeTouch : MonoBehaviour
 {
     private Player player;
     GameColors _lineGameColor;
+    private bool isFever = false;
 
     private void Awake()
     {
@@ -18,19 +19,14 @@ public class SnakeTouch : MonoBehaviour
 
         if (other.CompareTag("ObjectOnRoad"))
         {
-            // Debug.Log(other.tag);
-            if (IsEatable(other.gameObject))
+            if (IsEatable(other.gameObject) || isFever)
             {
                 Destroy(other.gameObject);
-
-                //для теста - убрать
-                player.IncreaseTail();
             }
             else
             {
                 player.SetIsSnakeMove(false);
             }
-
             return;
         }
 
@@ -50,8 +46,14 @@ public class SnakeTouch : MonoBehaviour
         switch (GetObjectType(objectOnRoad))
         {
             case "human":
-                return IsSameColorAsSnake(objectOnRoad);
+                if (IsSameColorAsSnake(objectOnRoad) || isFever)
+                {
+                    IncreaseCountEatenHumans();
+                    return true;
+                }
+                return false;
             case "crystal":
+                IncreaseCountEatenCrystals();
                 return true;
             case "trap":
                 return false;
@@ -81,5 +83,19 @@ public class SnakeTouch : MonoBehaviour
             return true;
         }
         return false;
+    }
+
+    void IncreaseCountEatenHumans()
+    {
+        player.IncreaseCountEatenHumans();
+    }
+    void IncreaseCountEatenCrystals()
+    {
+        player.IncreaseCountEatenCrystals();
+    }
+
+    public void SetIsFever(bool fever)
+    {
+        isFever = fever;
     }
 }

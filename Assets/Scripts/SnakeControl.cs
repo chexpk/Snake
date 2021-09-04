@@ -7,8 +7,11 @@ using UnityEngine.UIElements;
 public class SnakeControl : MonoBehaviour
 {
     [SerializeField] float speed = 25f;
+    private float normalSpeed;
     [SerializeField] private Camera cam;
     [SerializeField] private bool isMove = true;
+    [SerializeField] private bool isFever = false;
+    [SerializeField] private int speedBoost = 3;
 
     [Header("Position on road")]
     [SerializeField] private float minX = -10f;
@@ -28,7 +31,7 @@ public class SnakeControl : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        normalSpeed = speed;
     }
 
     // Update is called once per frame
@@ -43,7 +46,10 @@ public class SnakeControl : MonoBehaviour
 
         positionYTargetCorrector = speed * smoothTime;
         Vector3 targetPosition = new Vector3(_transform.position.x, _transform.position.y + positionYTargetCorrector, _transform.position.z);
+
+
         //TODO добавить ввод с тача
+
         if(Input.GetMouseButton(0))
         {
             RaycastHit hit;
@@ -57,18 +63,15 @@ public class SnakeControl : MonoBehaviour
             }
         }
 
+        if (isFever == true)
+        {
+            positionYTargetCorrector = speed * smoothTime;
+            var middleX = (maxX + minX) / 2;
+            targetPosition = new Vector3(middleX, _transform.position.y + positionYTargetCorrector, _transform.position.z);
+        }
+
         _transform.position = Vector3.SmoothDamp(_transform.position, targetPosition, ref velocity, smoothTime);
-
-        //TODO откорректировать поворот к цели
         _transform.LookAt(targetPosition, new Vector3(0, 0, -1));
-        // Vector3 lookAtPosition = new Vector3(targetPosition.x, targetPosition.x, targetPosition.z);
-        // _transform.LookAt(lookAtPosition);
-
-        // var dir = targetPosition - _transform.position;
-        // Quaternion LookAtRotation = Quaternion.LookRotation(dir);
-        //
-        // Quaternion LookAtRotationOnly_Y = Quaternion.Euler(LookAtRotation.eulerAngles.x, transform.rotation.eulerAngles.y, LookAtRotation.eulerAngles.z);
-        // transform.rotation = LookAtRotationOnly_Y;
     }
 
     public void SetIsMove(bool move)
@@ -76,5 +79,26 @@ public class SnakeControl : MonoBehaviour
         isMove = move;
     }
 
+    public void SetIsFever(bool fever)
+    {
+        // налладить логику
+        SetSpeedToNormal();
+        isFever = fever;
+        if (fever)
+        {
+            IncreaseSpeedByIndexTimes(speedBoost);
+        }
+    }
 
+    void IncreaseSpeedByIndexTimes(int indexOfSpeed)
+    {
+        normalSpeed = speed;
+        speed *= indexOfSpeed;
+        Debug.Log(speed);
+    }
+
+    void SetSpeedToNormal()
+    {
+        speed = normalSpeed;
+    }
 }

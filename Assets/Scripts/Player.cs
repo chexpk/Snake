@@ -5,13 +5,17 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
 
-    // [SerializeField] private HumanColor snakeColor = (HumanColor) 5;
     private SnakeTail snakeTail;
     private SnakeControl snakeControl;
     private Renderer _renderer;
-
-    // [SerializeField] Color curentColor = Color.white;
+    private SnakeTouch snakeTouch;
     private GameColors _snakeGameColor = new GameColors(5);
+
+    [SerializeField] private int feverTime = 5;
+    [SerializeField] private int countEatenHumans = 0;
+
+    [SerializeField] private int countEatenCrystals = 0;
+    [SerializeField] private int countOfEatenInRowCrystals = 0;
 
     // Start is called before the first frame update
     void Awake()
@@ -20,6 +24,7 @@ public class Player : MonoBehaviour
         snakeControl = GetComponent<SnakeControl>();
         snakeTail = GetComponent<SnakeTail>();
         _renderer = GetComponent<Renderer>();
+        snakeTouch = GetComponent<SnakeTouch>();
     }
 
     // Update is called once per frame
@@ -47,6 +52,50 @@ public class Player : MonoBehaviour
     {
         _snakeGameColor = gameColor;
         _renderer.material.color = _snakeGameColor.GetColor();
-        // snakeTail.ChangeColor(gameColor);
     }
+
+    public void IncreaseCountEatenHumans()
+    {
+        ++countEatenHumans;
+        SetCountOfEatenInRowCrystalsToZero();
+        IncreaseTail();
+    }
+
+    public void IncreaseCountEatenCrystals()
+    {
+        if (countOfEatenInRowCrystals > 2)
+        {
+            FeverModeOn();
+        }
+        ++countEatenCrystals;
+        ++countOfEatenInRowCrystals;
+    }
+
+    void SetCountEatenCrystalsToZero()
+    {
+        countEatenCrystals = 0;
+    }
+
+    void SetCountOfEatenInRowCrystalsToZero()
+    {
+        countOfEatenInRowCrystals = 0;
+    }
+
+    void FeverModeOn()
+    {
+        snakeControl.SetIsFever(true);
+        snakeTouch.SetIsFever(true);
+
+        Invoke("FeverModeOff", feverTime);
+    }
+
+    void FeverModeOff()
+    {
+        snakeControl.SetIsFever(false);
+        snakeTouch.SetIsFever(false);
+
+        SetCountOfEatenInRowCrystalsToZero();
+        SetCountEatenCrystalsToZero();
+    }
+
 }
