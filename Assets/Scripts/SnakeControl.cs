@@ -14,7 +14,7 @@ public class SnakeControl : MonoBehaviour
     [SerializeField] private float minX = -10f;
     [SerializeField] private float maxX = 10f;
 
-    private float smoothTime = 0.09f;
+    private float smoothTime = 0.08f;
     private float positionYTargetCorrector;
     private Vector3 velocity = Vector3.zero;
     private Transform _transform;

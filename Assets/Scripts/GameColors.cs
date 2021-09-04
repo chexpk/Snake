@@ -2,8 +2,10 @@
 using System;
 using UnityEngine;
 
+[System.Serializable]
 public class GameColors
 {
+    [System.Serializable]
     public enum AllGameColors
     {
         green,

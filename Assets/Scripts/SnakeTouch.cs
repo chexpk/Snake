@@ -76,9 +76,6 @@ public class SnakeTouch : MonoBehaviour
 
     bool IsSameColorAsSnake(ObjectOnRoad objectOnRoad)
     {
-        // Debug.Log(GetHumanColor(objectOnRoad));
-        // Debug.Log(GetCurrentColor());
-        // ColorUtility.TryParseHtmlString(GetCurrentColor(), out var color);
         if (GetIndexOfHumanColor(objectOnRoad) == GetIndexOfCurrentColor())
         {
             return true;

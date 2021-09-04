@@ -12,19 +12,8 @@ public class ObjectOnRoad : MonoBehaviour
         trap
     }
 
-    public enum HumanColor
-    {
-        green,
-        red,
-        blue,
-        yellow,
-        magenta,
-        white,
-        black
-    }
-
     [SerializeField] public ObjectType type;
-    [SerializeField] private HumanColor humanColor = HumanColor.white;
+    [SerializeField] private GameColors humanColor = new GameColors(5);
 
     private Renderer _renderer;
 
@@ -35,19 +24,10 @@ public class ObjectOnRoad : MonoBehaviour
 
     void Start()
     {
-        // partOfTail.GetComponent<Renderer>().material.color = new Color(0, 255, 0);
-        // type = ObjectType.human;
-        // humanColor = HumanColor.white;
-        // Debug.Log(type);
-        // Debug.Log(type.ToString());
-        // Debug.Log((int)type);
         if ((int) type == 0)
         {
-            // Debug.Log("зашел");
-            var col = ConvertToColor(humanColor);
-            SetColor(col);
+            SetColor(humanColor);
         }
-
     }
 
     // Update is called once per frame
@@ -63,24 +43,18 @@ public class ObjectOnRoad : MonoBehaviour
 
     public int GetIndexOfHumanColor()
     {
-        return (int)humanColor;
+        return humanColor.GetIndexOfColor();
     }
 
-    void SetColor(Color color)
+    void SetColor(GameColors color)
     {
-        _renderer.material.color = color;
-    }
-
-    Color ConvertToColor(HumanColor humanCol)
-    {
-        ColorUtility.TryParseHtmlString(humanCol.ToString(), out var color);
-        return color;
+        _renderer.material.color = color.GetColor();
     }
 
     public void SetHumanColor(int indexOfHumanColor)
     {
         if ((int) type != 0) return;
-        humanColor = (HumanColor) indexOfHumanColor;
-        SetColor(ConvertToColor(humanColor));
+        humanColor.SetIndexColorTo(indexOfHumanColor);
+        SetColor(humanColor);
     }
 }
