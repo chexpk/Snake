@@ -190,7 +190,7 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.53
+  m_Radius: 0.41
   m_Center: {x: 0.00000047683716, y: 0, z: 0}
 --- !u!114 &385505391042787377
 MonoBehaviour:
@@ -205,4 +205,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 2
-  humanColor: 5
+  humanColor:
+    color: 5

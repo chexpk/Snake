@@ -1,11 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 
 public class Player : MonoBehaviour
 {
+    public UnityEvent stopMove;
+
+    [SerializeField] private BlocksGenerator blocksGenerator;
+    [SerializeField] private UIController uiController;
+    [SerializeField] private int feverTime = 5;
+    [SerializeField] private int countOfHumansToIncreaseTail = 10;
+    [SerializeField] private int countOfCrystalsToFever = 3;
 
     private SnakeTail snakeTail;
     private SnakeControl snakeControl;
@@ -13,17 +21,15 @@ public class Player : MonoBehaviour
     private SnakeTouch snakeTouch;
     private GameColors _snakeGameColor;
 
-    [SerializeField] private UIController uiController;
-    [SerializeField] private int feverTime = 5;
-    [SerializeField] private int countEatenHumans = 0;
-    [SerializeField] private int countEatenHumansToIncreaseTail = 0;
+    private int countEatenHumans = 0;
+    private int countEatenHumansToIncreaseTail = 0;
 
-    [SerializeField] private int countEatenCrystals = 0;
-    [SerializeField] private int countOfEatenInRowCrystals = 0;
+    private int countEatenCrystals = 0;
+    private int countOfEatenInRowCrystals = 0;
 
 
     // [SerializeField] private GameObject spawnPointToText;
-    [SerializeField] private GameObject increaseCountText;
+    // [SerializeField] private GameObject increaseCountText;
 
     // Start is called before the first frame update
     void Awake()
@@ -33,12 +39,13 @@ public class Player : MonoBehaviour
         snakeTail = GetComponent<SnakeTail>();
         _renderer = GetComponent<Renderer>();
         snakeTouch = GetComponent<SnakeTouch>();
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public GameColors GetCurrentColor()
@@ -69,13 +76,14 @@ public class Player : MonoBehaviour
         ++countEatenHumans;
         SetCountOfEatenInRowCrystalsToZero();
         CheckIncreaseTail();
-        uiController.ChangeHumansCountText(countEatenHumans);
+
+        SetCountHumansToUi(countEatenHumans);
     }
 
     void CheckIncreaseTail()
     {
         ++countEatenHumansToIncreaseTail;
-        if (countEatenHumansToIncreaseTail > 9)
+        if (countEatenHumansToIncreaseTail > countOfHumansToIncreaseTail - 1)
         {
             IncreaseTail();
             countEatenHumansToIncreaseTail = 0;
@@ -86,16 +94,19 @@ public class Player : MonoBehaviour
     {
         ++countEatenCrystals;
         ++countOfEatenInRowCrystals;
-        if (countOfEatenInRowCrystals > 2)
+        if (countOfEatenInRowCrystals > countOfCrystalsToFever - 1)
         {
             FeverModeOn();
         }
-        uiController.ChangeCrystalsCountText(countEatenCrystals);
+
+        SetCountCrystalsToUi(countEatenCrystals);
     }
 
     void SetCountEatenCrystalsToZero()
     {
         countEatenCrystals = 0;
+
+        SetCountCrystalsToUi(countEatenCrystals);
     }
 
     void SetCountOfEatenInRowCrystalsToZero()
@@ -125,7 +136,39 @@ public class Player : MonoBehaviour
         //создаю всплывающий текст
         // var go = Instantiate(Crt);
         // go.transform.SetParent(canvas.transform);
-
     }
 
+    public void RestartSnake(Vector3 basePosition)
+    {
+        snakeControl.SetPositionToRestart(basePosition);
+        snakeControl.SetIsMove(true);
+        _snakeGameColor = new GameColors(1);
+        snakeTail.RestartTail();
+        RestartAllCounts();
+    }
+
+    void SetCountCrystalsToUi(int count)
+    {
+        uiController.ChangeCrystalsCountText(count);
+    }
+
+    void SetCountHumansToUi(int count)
+    {
+        uiController.ChangeHumansCountText(count);
+    }
+
+    void RestartAllCounts()
+    {
+        countEatenHumans = 0;
+        countEatenHumansToIncreaseTail = 0;
+        countEatenCrystals = 0;
+        countOfEatenInRowCrystals = 0;
+        SetCountCrystalsToUi(0);
+        SetCountHumansToUi(0);
+    }
+
+    public void UskToCreatNextBlock()
+    {
+        blocksGenerator.CreatBlock();
+    }
 }

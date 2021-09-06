@@ -109,4 +109,9 @@ public class SnakeControl : MonoBehaviour
         Touch touch = Input.GetTouch(0);
         return new Vector3(touch.position.x, touch.position.y, 0f);
     }
+
+    public void SetPositionToRestart(Vector3 position)
+    {
+        _transform.position = position;
+    }
 }

@@ -36,6 +36,8 @@ public class SnakeTouch : MonoBehaviour
             var colorLine = other.gameObject.GetComponent<ColorLine>();
             _lineGameColor = colorLine.GetColor();
             player.SetSnakeColor(_lineGameColor);
+
+            CreatNextBlock();
         }
     }
 
@@ -98,5 +100,10 @@ public class SnakeTouch : MonoBehaviour
     public void SetIsFever(bool fever)
     {
         isFever = fever;
+    }
+
+    void CreatNextBlock()
+    {
+        player.UskToCreatNextBlock();
     }
 }

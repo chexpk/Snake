@@ -19,6 +19,7 @@ public class BlockController : MonoBehaviour
     [SerializeField] private GameObject[] humans4;
     [SerializeField] private GameObject[] humans5;
     [SerializeField] private GameObject[] humans6;
+    [SerializeField] private GameObject[] humans7;
 
     private void Awake()
     {
@@ -29,6 +30,7 @@ public class BlockController : MonoBehaviour
         allHumans.Add(humans4);
         allHumans.Add(humans5);
         allHumans.Add(humans6);
+        allHumans.Add(humans7);
     }
 
     private void Start()
@@ -41,13 +43,8 @@ public class BlockController : MonoBehaviour
     {
         int lengthEnum = _lineGameColors.Length();
         int randomNum = Random.Range(0, lengthEnum);
-        // lineColors = (LineColors)randomNum;
-        // var stringColor = lineColors.ToString();
-        // ColorUtility.TryParseHtmlString(stringColor, out var color);
         colorLine.SetLineColor(randomNum);
         _lineGameColors.SetIndexColorTo(randomNum);
-        // colorLine.GetComponent<Renderer>().material.color = color;
-        // currentLineColor = color;
     }
 
     void SetColorToHumans()
