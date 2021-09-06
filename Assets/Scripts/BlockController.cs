@@ -5,22 +5,13 @@ using Random = UnityEngine.Random;
 
 public class BlockController : MonoBehaviour
 {
-    // public enum LineColors
-    // {
-    //     green,
-    //     red,
-    //     blue,
-    //     yellow,
-    //     magenta,
-    //     white,
-    //     black
-    // }
-
-    // private LineColors lineColors;
     private GameColors _lineGameColors = new GameColors(5);
     [SerializeField] ColorLine colorLine;
-    // private Color currentLineColor;
-    private List<GameObject[]> allHumans = new List<GameObject[]>();
+    [SerializeField] List<GameObject> allCrystals = new List<GameObject>();
+    [SerializeField] List<GameObject> allTraps = new List<GameObject>();
+
+    [SerializeField] public List<GameObject[]> allHumans = new List<GameObject[]>();
+
     [SerializeField] private GameObject[] humans0;
     [SerializeField] private GameObject[] humans1;
     [SerializeField] private GameObject[] humans2;
@@ -28,7 +19,6 @@ public class BlockController : MonoBehaviour
     [SerializeField] private GameObject[] humans4;
     [SerializeField] private GameObject[] humans5;
     [SerializeField] private GameObject[] humans6;
-
 
     private void Awake()
     {
@@ -75,6 +65,7 @@ public class BlockController : MonoBehaviour
             }
             foreach (var goHum in humans)
             {
+                goHum.SetActive(true);
                 goHum.GetComponent<ObjectOnRoad>().SetHumanColor(indexOfColor);
             }
         }
@@ -90,5 +81,24 @@ public class BlockController : MonoBehaviour
         }
         while (randomNum == _lineGameColors.GetIndexOfColor());
         return randomNum;
+    }
+
+    void Restart()
+    {
+        SetRandomColorToLine();
+        SetColorToHumans();
+        SetActiveToCrystalsAndTraps();
+    }
+
+    void SetActiveToCrystalsAndTraps()
+    {
+        foreach (var crystal in allCrystals)
+        {
+            crystal.SetActive(true);
+        }
+        foreach (var trap in allTraps)
+        {
+            trap.SetActive(true);
+        }
     }
 }

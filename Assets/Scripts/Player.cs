@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class Player : MonoBehaviour
 {
@@ -9,18 +11,24 @@ public class Player : MonoBehaviour
     private SnakeControl snakeControl;
     private Renderer _renderer;
     private SnakeTouch snakeTouch;
-    private GameColors _snakeGameColor = new GameColors(5);
+    private GameColors _snakeGameColor;
 
+    [SerializeField] private UIController uiController;
     [SerializeField] private int feverTime = 5;
     [SerializeField] private int countEatenHumans = 0;
+    [SerializeField] private int countEatenHumansToIncreaseTail = 0;
 
     [SerializeField] private int countEatenCrystals = 0;
     [SerializeField] private int countOfEatenInRowCrystals = 0;
 
+
+    // [SerializeField] private GameObject spawnPointToText;
+    [SerializeField] private GameObject increaseCountText;
+
     // Start is called before the first frame update
     void Awake()
     {
-        _snakeGameColor = new GameColors(5);
+        _snakeGameColor = new GameColors(1);
         snakeControl = GetComponent<SnakeControl>();
         snakeTail = GetComponent<SnakeTail>();
         _renderer = GetComponent<Renderer>();
@@ -41,6 +49,7 @@ public class Player : MonoBehaviour
     public void SetIsSnakeMove(bool move)
     {
         snakeControl.SetIsMove(move);
+        snakeTail.DestroyTail();
     }
 
     public void IncreaseTail()
@@ -56,19 +65,32 @@ public class Player : MonoBehaviour
 
     public void IncreaseCountEatenHumans()
     {
+        CreatIncreaseCountText();
         ++countEatenHumans;
         SetCountOfEatenInRowCrystalsToZero();
-        IncreaseTail();
+        CheckIncreaseTail();
+        uiController.ChangeHumansCountText(countEatenHumans);
+    }
+
+    void CheckIncreaseTail()
+    {
+        ++countEatenHumansToIncreaseTail;
+        if (countEatenHumansToIncreaseTail > 9)
+        {
+            IncreaseTail();
+            countEatenHumansToIncreaseTail = 0;
+        }
     }
 
     public void IncreaseCountEatenCrystals()
     {
+        ++countEatenCrystals;
+        ++countOfEatenInRowCrystals;
         if (countOfEatenInRowCrystals > 2)
         {
             FeverModeOn();
         }
-        ++countEatenCrystals;
-        ++countOfEatenInRowCrystals;
+        uiController.ChangeCrystalsCountText(countEatenCrystals);
     }
 
     void SetCountEatenCrystalsToZero()
@@ -95,7 +117,15 @@ public class Player : MonoBehaviour
         snakeTouch.SetIsFever(false);
 
         SetCountOfEatenInRowCrystalsToZero();
-        SetCountEatenCrystalsToZero();
+        // SetCountEatenCrystalsToZero();
+    }
+
+    void CreatIncreaseCountText()
+    {
+        //создаю всплывающий текст
+        // var go = Instantiate(Crt);
+        // go.transform.SetParent(canvas.transform);
+
     }
 
 }

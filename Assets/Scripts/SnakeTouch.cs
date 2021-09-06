@@ -21,7 +21,8 @@ public class SnakeTouch : MonoBehaviour
         {
             if (IsEatable(other.gameObject) || isFever)
             {
-                Destroy(other.gameObject);
+                // Destroy(other.gameObject);
+                other.gameObject.SetActive(false);
             }
             else
             {

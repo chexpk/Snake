@@ -5,7 +5,6 @@ using UnityEngine;
 [System.Serializable]
 public class GameColors
 {
-    [System.Serializable]
     public enum AllGameColors
     {
         green,
@@ -13,7 +12,7 @@ public class GameColors
         blue,
         yellow,
         magenta,
-        white,
+        grey,
         black
     }
 

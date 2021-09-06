@@ -9,10 +9,18 @@ public class PartOfTail : MonoBehaviour
     public float targetDistance;
     private Renderer _renderer;
     private GameColors partTailColor = new GameColors(5);
+    private GameObject go;
+
+    private void Awake()
+    {
+        _renderer = GetComponent<Renderer>();
+        go = GetComponent<GameObject>();
+    }
 
     private void Start()
     {
-        _renderer = GetComponent<Renderer>();
+
+
     }
 
     public void Update()
@@ -35,5 +43,10 @@ public class PartOfTail : MonoBehaviour
             partTailColor = colorLine.GetColor();
             _renderer.material.color = partTailColor.GetColor();
         }
+    }
+
+    public void Destroy()
+    {
+        Destroy(go);
     }
 }

@@ -37,6 +37,10 @@ public class SnakeControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.touchCount > 0)
+        {
+            GetTouchPosition();
+        }
         MoveByRayCast();
     }
 
@@ -81,24 +85,28 @@ public class SnakeControl : MonoBehaviour
 
     public void SetIsFever(bool fever)
     {
-        // налладить логику
-        SetSpeedToNormal();
         isFever = fever;
         if (fever)
         {
             IncreaseSpeedByIndexTimes(speedBoost);
+            return;
         }
+        SetSpeedToNormal();
     }
 
     void IncreaseSpeedByIndexTimes(int indexOfSpeed)
     {
-        normalSpeed = speed;
-        speed *= indexOfSpeed;
-        Debug.Log(speed);
+        speed = normalSpeed * indexOfSpeed;
     }
 
     void SetSpeedToNormal()
     {
         speed = normalSpeed;
+    }
+
+    Vector3 GetTouchPosition()
+    {
+        Touch touch = Input.GetTouch(0);
+        return new Vector3(touch.position.x, touch.position.y, 0f);
     }
 }
