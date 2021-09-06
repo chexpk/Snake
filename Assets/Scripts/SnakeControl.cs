@@ -9,7 +9,7 @@ public class SnakeControl : MonoBehaviour
     [SerializeField] float speed = 25f;
     private float normalSpeed;
     [SerializeField] private Camera cam;
-    [SerializeField] private bool isMove = true;
+    [SerializeField] private bool isMove = false;
     [SerializeField] private bool isFever = false;
     [SerializeField] private int speedBoost = 3;
 

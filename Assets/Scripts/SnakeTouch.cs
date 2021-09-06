@@ -26,7 +26,7 @@ public class SnakeTouch : MonoBehaviour
             }
             else
             {
-                player.SetIsSnakeMove(false);
+                SnakeCrashed();
             }
             return;
         }
@@ -105,5 +105,10 @@ public class SnakeTouch : MonoBehaviour
     void CreatNextBlock()
     {
         player.UskToCreatNextBlock();
+    }
+
+    void SnakeCrashed()
+    {
+        player.SnakeCrashed();
     }
 }

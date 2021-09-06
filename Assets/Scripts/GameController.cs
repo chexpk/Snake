@@ -5,11 +5,12 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
-    private Vector3 basePlayerPosition = new Vector3(0, 0, 2.45f);
-    private bool isGameStarted = true;
 
     [SerializeField] private Player player;
     [SerializeField] private BlocksGenerator blocks;
+    [SerializeField] private UIController uiController;
+
+    [SerializeField] Vector3 basePlayerPosition = new Vector3(0, 0, 2.45f);
 
     private void Awake()
     {
@@ -34,8 +35,22 @@ public class GameController : MonoBehaviour
     {
         player.RestartSnake(basePlayerPosition);
         blocks.RestartBlocks();
+        uiController.ShowRestartDisplay(false);
     }
 
+    void Restart()
+    {
 
+    }
 
+    public void ShowRestartButtonByEvent()
+    {
+        uiController.ShowRestartDisplay(true);
+    }
+
+    public void StartGame()
+    {
+        uiController.HideStartDisplay();
+        RestartByUiButton();
+    }
 }

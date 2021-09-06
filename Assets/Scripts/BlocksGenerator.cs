@@ -18,6 +18,11 @@ public class BlocksGenerator : MonoBehaviour
 
     }
 
+    private void Start()
+    {
+        CreatFirstBlock();
+    }
+
     void CreatFirstBlock()
     {
         var goBlock = Instantiate(allPrefabsBlocks[0], basePositionToFirstSpawn, Quaternion.identity);
@@ -36,7 +41,6 @@ public class BlocksGenerator : MonoBehaviour
 
     Vector3 GetPositionToSpawn()
     {
-        Debug.Log(lastBlockPosition);
         return new Vector3(lastBlockPosition.x, lastBlockPosition.y + (blockSizeY / 2), lastBlockPosition.z);
     }
 

@@ -56,7 +56,13 @@ public class Player : MonoBehaviour
     public void SetIsSnakeMove(bool move)
     {
         snakeControl.SetIsMove(move);
+        // snakeTail.DestroyTail();
+    }
+    public void SnakeCrashed()
+    {
+        SetIsSnakeMove(false);
         snakeTail.DestroyTail();
+        stopMove.Invoke();
     }
 
     public void IncreaseTail()
@@ -141,7 +147,7 @@ public class Player : MonoBehaviour
     public void RestartSnake(Vector3 basePosition)
     {
         snakeControl.SetPositionToRestart(basePosition);
-        snakeControl.SetIsMove(true);
+        SetIsSnakeMove(true);
         _snakeGameColor = new GameColors(1);
         snakeTail.RestartTail();
         RestartAllCounts();
