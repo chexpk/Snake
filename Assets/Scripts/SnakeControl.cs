@@ -37,11 +37,18 @@ public class SnakeControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.touchCount > 0)
-        {
-            GetTouchPosition();
-        }
-        MoveByRayCast();
+        // if (Input.touchCount > 0)
+        // {
+        //     // MoveByRayCast(GetTouchPosition());
+        // }
+        //
+        // if (Input.GetMouseButton(0))
+        // {
+        //     // MoveByRayCast(Input.mousePosition);
+        // }
+
+        // MoveByRayCast();
+        Move();
     }
 
     void MoveByRayCast()
@@ -58,6 +65,38 @@ public class SnakeControl : MonoBehaviour
         {
             RaycastHit hit;
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+
+            if (Physics.Raycast(ray, out hit))
+            {
+                var hitPosition = hit.point;
+                float xPos = Mathf.Clamp(hitPosition.x, minX, maxX);
+                targetPosition = new Vector3(xPos, _transform.position.y + positionYTargetCorrector, _transform.position.z);
+            }
+        }
+
+        if (isFever == true)
+        {
+            positionYTargetCorrector = speed * smoothTime;
+            var middleX = (maxX + minX) / 2;
+            targetPosition = new Vector3(middleX, _transform.position.y + positionYTargetCorrector, _transform.position.z);
+        }
+
+        _transform.position = Vector3.SmoothDamp(_transform.position, targetPosition, ref velocity, smoothTime);
+        _transform.LookAt(targetPosition, new Vector3(0, 0, -1));
+    }
+
+    void Move()
+    {
+        if (isMove != true) return;
+
+        positionYTargetCorrector = speed * smoothTime;
+        Vector3 targetPosition = new Vector3(_transform.position.x, _transform.position.y + positionYTargetCorrector, _transform.position.z);
+
+
+        if(Input.touchCount > 0)
+        {
+            RaycastHit hit;
+            Ray ray = cam.ScreenPointToRay(Input.GetTouch(0).position);
 
             if (Physics.Raycast(ray, out hit))
             {
@@ -106,8 +145,12 @@ public class SnakeControl : MonoBehaviour
 
     Vector3 GetTouchPosition()
     {
-        Touch touch = Input.GetTouch(0);
-        return new Vector3(touch.position.x, touch.position.y, 0f);
+        return Input.GetTouch(0).position;
+    }
+
+    Vector3 GetMousePosition()
+    {
+        return Input.mousePosition;
     }
 
     public void SetPositionToRestart(Vector3 position)
