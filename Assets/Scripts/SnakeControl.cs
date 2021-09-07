@@ -49,46 +49,46 @@ public class SnakeControl : MonoBehaviour
         // Move();
     }
 
-    void MoveByRayCast()
-    {
-        if (isMove != true) return;
-
-        positionYTargetCorrector = speed * smoothTime;
-        Vector3 targetPosition = new Vector3(_transform.position.x, _transform.position.y + positionYTargetCorrector, _transform.position.z);
-
-
-        //TODO добавить ввод с тача
-
-        if(Input.GetMouseButton(0))
-        {
-            RaycastHit hit;
-            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-
-            if (Physics.Raycast(ray, out hit))
-            {
-                var hitPosition = hit.point;
-                float xPos = Mathf.Clamp(hitPosition.x, minX, maxX);
-                targetPosition = new Vector3(xPos, _transform.position.y + positionYTargetCorrector, _transform.position.z);
-            }
-        }
-
-        if (isFever == true)
-        {
-            positionYTargetCorrector = speed * smoothTime;
-            var middleX = (maxX + minX) / 2;
-            targetPosition = new Vector3(middleX, _transform.position.y + positionYTargetCorrector, _transform.position.z);
-        }
-
-        _transform.position = Vector3.SmoothDamp(_transform.position, targetPosition, ref velocity, smoothTime);
-        _transform.LookAt(targetPosition, new Vector3(0, 0, -1));
-    }
+    // void MoveByRayCast()
+    // {
+    //     if (isMove != true) return;
+    //
+    //     positionYTargetCorrector = speed * smoothTime;
+    //     Vector3 targetPosition = new Vector3(_transform.position.x, _transform.position.y + positionYTargetCorrector, _transform.position.z);
+    //
+    //
+    //     //TODO добавить ввод с тача
+    //
+    //     if(Input.GetMouseButton(0))
+    //     {
+    //         RaycastHit hit;
+    //         Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+    //
+    //         if (Physics.Raycast(ray, out hit))
+    //         {
+    //             var hitPosition = hit.point;
+    //             float xPos = Mathf.Clamp(hitPosition.x, minX, maxX);
+    //             targetPosition = new Vector3(xPos, _transform.position.y + positionYTargetCorrector, _transform.position.z);
+    //         }
+    //     }
+    //
+    //     if (isFever == true)
+    //     {
+    //         positionYTargetCorrector = speed * smoothTime;
+    //         var middleX = (maxX + minX) / 2;
+    //         targetPosition = new Vector3(middleX, _transform.position.y + positionYTargetCorrector, _transform.position.z);
+    //     }
+    //
+    //     _transform.position = Vector3.SmoothDamp(_transform.position, targetPosition, ref velocity, smoothTime);
+    //     _transform.LookAt(targetPosition, new Vector3(0, 0, -1));
+    // }
 
     void Move()
     {
-        if (isMove != true) return;
+        if (!isMove) return;
 
-        positionYTargetCorrector = speed * smoothTime;
-        Vector3 targetPosition = new Vector3(_transform.position.x, _transform.position.y + positionYTargetCorrector, _transform.position.z);
+        // positionYTargetCorrector = speed * smoothTime;
+        Vector3 targetPosition = new Vector3(_transform.position.x, _transform.position.y + SetCurrPositionYTargetCorrector(), _transform.position.z);
 
 
         if(Input.touchCount > 0)
@@ -100,19 +100,54 @@ public class SnakeControl : MonoBehaviour
             {
                 var hitPosition = hit.point;
                 float xPos = Mathf.Clamp(hitPosition.x, minX, maxX);
-                targetPosition = new Vector3(xPos, _transform.position.y + positionYTargetCorrector, _transform.position.z);
+                targetPosition = new Vector3(xPos, _transform.position.y + SetCurrPositionYTargetCorrector(), _transform.position.z);
             }
         }
 
-        if (isFever == true)
+        if (isFever)
         {
             positionYTargetCorrector = speed * smoothTime;
             var middleX = (maxX + minX) / 2;
-            targetPosition = new Vector3(middleX, _transform.position.y + positionYTargetCorrector, _transform.position.z);
+            targetPosition = new Vector3(middleX, _transform.position.y + SetCurrPositionYTargetCorrector(), _transform.position.z);
         }
 
         _transform.position = Vector3.SmoothDamp(_transform.position, targetPosition, ref velocity, smoothTime);
         _transform.LookAt(targetPosition, new Vector3(0, 0, -1));
+    }
+
+    void MoveByRayCast()
+    {
+        if (!isMove) return;
+
+        var targetPosition = GetConstantTargetPosition();
+        if(Input.GetMouseButton(0))
+        {
+            RaycastHit hit;
+            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+
+            targetPosition = SetNewTargetPosition(ray);
+        }
+        if(Input.touchCount > 0)
+        {
+            RaycastHit hit;
+            Ray ray = cam.ScreenPointToRay(Input.GetTouch(0).position);
+
+            targetPosition = SetNewTargetPosition(ray);
+        }
+
+        if (isFever)
+        {
+            var middleX = (maxX + minX) / 2;
+            targetPosition = new Vector3(middleX, _transform.position.y + SetCurrPositionYTargetCorrector(), _transform.position.z);
+        }
+
+        _transform.position = Vector3.SmoothDamp(_transform.position, targetPosition, ref velocity, smoothTime);
+        _transform.LookAt(targetPosition, new Vector3(0, 0, -1));
+    }
+
+    public void SetPositionToRestart(Vector3 position)
+    {
+        _transform.position = position;
     }
 
     public void SetIsMove(bool move)
@@ -140,19 +175,34 @@ public class SnakeControl : MonoBehaviour
     {
         speed = normalSpeed;
     }
+    //
+    // Vector3 GetTouchPosition()
+    // {
+    //     return Input.GetTouch(0).position;
+    // }
+    //
+    // Vector3 GetMousePosition()
+    // {
+    //     return Input.mousePosition;
+    // }
 
-    Vector3 GetTouchPosition()
+    float SetCurrPositionYTargetCorrector()
     {
-        return Input.GetTouch(0).position;
+        return positionYTargetCorrector = speed * smoothTime;
     }
 
-    Vector3 GetMousePosition()
+    Vector3 SetNewTargetPosition(Ray ray)
     {
-        return Input.mousePosition;
+        if (Physics.Raycast(ray, out var hit))
+        {
+            var hitPosition = hit.point;
+            float xPos = Mathf.Clamp(hitPosition.x, minX, maxX);
+            return new Vector3(xPos, _transform.position.y + SetCurrPositionYTargetCorrector(), _transform.position.z);
+        }
+        return GetConstantTargetPosition();
     }
 
-    public void SetPositionToRestart(Vector3 position)
-    {
-        _transform.position = position;
+    Vector3 GetConstantTargetPosition() {
+        return new Vector3(_transform.position.x, _transform.position.y + SetCurrPositionYTargetCorrector(), _transform.position.z);
     }
 }
