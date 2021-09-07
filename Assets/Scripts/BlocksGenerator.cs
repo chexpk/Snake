@@ -10,25 +10,23 @@ public class BlocksGenerator : MonoBehaviour
     [SerializeField] private float blockSizeY = 360f;
     [SerializeField] private Vector3 basePositionToFirstSpawn = new Vector3(0, 110, 0);
     private Vector3 lastBlockPosition;
-    [SerializeField] private List<GameObject> allExistBlocks = new List<GameObject>();
-
-
-    private void Awake()
-    {
-
-    }
+    private List<GameObject> allExistBlocks = new List<GameObject>();
 
     private void Start()
     {
         CreatFirstBlock();
     }
 
-    void CreatFirstBlock()
+    public void RestartBlocks()
     {
-        var goBlock = Instantiate(allPrefabsBlocks[0], basePositionToFirstSpawn, Quaternion.identity);
-        SetLastPositionOfSpawn(basePositionToFirstSpawn);
-        allExistBlocks.Add(goBlock);
+        foreach (var block in allExistBlocks)
+        {
+            Destroy(block);
+        }
+        allExistBlocks = new List<GameObject>();
+        CreatFirstBlock();
     }
+
     public void CreatBlock()
     {
         DestroyOldBlock();
@@ -36,6 +34,13 @@ public class BlocksGenerator : MonoBehaviour
         int randomNum = Random.Range(0, lengthEnum);
         var goBlock = Instantiate(allPrefabsBlocks[randomNum], GetPositionToSpawn(), Quaternion.identity);
         SetLastPositionOfSpawn(GetPositionToSpawn());
+        allExistBlocks.Add(goBlock);
+    }
+
+    void CreatFirstBlock()
+    {
+        var goBlock = Instantiate(allPrefabsBlocks[0], basePositionToFirstSpawn, Quaternion.identity);
+        SetLastPositionOfSpawn(basePositionToFirstSpawn);
         allExistBlocks.Add(goBlock);
     }
 
@@ -49,22 +54,12 @@ public class BlocksGenerator : MonoBehaviour
         lastBlockPosition = position;
     }
 
-    public void RestartBlocks()
-    {
-        foreach (var block in allExistBlocks)
-        {
-            Destroy(block);
-        }
-
-        allExistBlocks = new List<GameObject>();
-        CreatFirstBlock();
-    }
-
     void DestroyOldBlock()
     {
         if (allExistBlocks.Count > 2)
         {
             Destroy(allExistBlocks[0]);
+            allExistBlocks.RemoveAt(0);
         }
     }
 }

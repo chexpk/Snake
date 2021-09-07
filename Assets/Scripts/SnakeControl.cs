@@ -7,16 +7,16 @@ using UnityEngine.UIElements;
 public class SnakeControl : MonoBehaviour
 {
     [SerializeField] float speed = 25f;
-    private float normalSpeed;
+    [SerializeField] private int speedBoost = 3;
     [SerializeField] private Camera cam;
     [SerializeField] private bool isMove = false;
     [SerializeField] private bool isFever = false;
-    [SerializeField] private int speedBoost = 3;
 
     [Header("Position on road")]
     [SerializeField] private float minX = -10f;
     [SerializeField] private float maxX = 10f;
 
+    private float normalSpeed;
     private float smoothTime = 0.08f;
     private float positionYTargetCorrector;
     private Vector3 velocity = Vector3.zero;
@@ -28,13 +28,11 @@ public class SnakeControl : MonoBehaviour
         _transform = transform;
     }
 
-    // Start is called before the first frame update
     void Start()
     {
         normalSpeed = speed;
     }
 
-    // Update is called once per frame
     void Update()
     {
         // if (Input.touchCount > 0)

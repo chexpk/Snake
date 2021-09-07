@@ -12,14 +12,22 @@ public class ObjectOnRoad : MonoBehaviour
         trap
     }
 
-    [SerializeField] public ObjectType type;
-    [SerializeField] private GameColors humanColor = new GameColors(5);
+    public ObjectType type;
+    private GameColors humanColor = new GameColors(5);
 
-    private Renderer _renderer;
+    [SerializeField] private float speedOfPulling = 30;
+    [SerializeField] private float liveTimeBetweenEatenAndDestroyed = 0.15f;
+
+    private bool isPulled = false;
+    private Transform targetToPulling;
+    Collider m_Collider;
+
+    Renderer _renderer;
 
     private void Awake()
     {
         _renderer = GetComponent<Renderer>();
+        m_Collider = GetComponent<Collider>();
     }
 
     void Start()
@@ -30,10 +38,12 @@ public class ObjectOnRoad : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
+        if (isPulled)
+        {
+            PulledToSnakeHead();
+        }
     }
 
     public ObjectType GetObjectType()
@@ -46,15 +56,45 @@ public class ObjectOnRoad : MonoBehaviour
         return humanColor.GetIndexOfColor();
     }
 
-    void SetColor(GameColors color)
-    {
-        _renderer.material.color = color.GetColor();
-    }
-
     public void SetHumanColor(int indexOfHumanColor)
     {
         if ((int) type != 0) return;
         humanColor.SetIndexColorTo(indexOfHumanColor);
         SetColor(humanColor);
+    }
+
+    public void Eaten(Transform target)
+    {
+        if ((int) type != 0)
+        {
+            DisableThisGo();
+        } else {
+            targetToPulling = target;
+            isPulled = true;
+
+            m_Collider.enabled = false;
+            Invoke("DisableThisGo", liveTimeBetweenEatenAndDestroyed);
+        }
+    }
+
+    void PulledToSnakeHead()
+    {
+        Vector3 direction = (targetToPulling.position - transform.position).normalized;
+        Quaternion lookRotation = Quaternion.LookRotation(direction);
+
+        if (targetToPulling == null) return;
+        float step =  speedOfPulling * Time.deltaTime;
+        transform.position = Vector3.MoveTowards(transform.position, targetToPulling.position, step);
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, lookRotation, step);
+    }
+
+    void SetColor(GameColors color)
+    {
+        _renderer.material.color = color.GetColor();
+    }
+
+    void DisableThisGo()
+    {
+        gameObject.SetActive(false);
     }
 }

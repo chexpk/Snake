@@ -8,10 +8,12 @@ public class SnakeTouch : MonoBehaviour
     private Player player;
     GameColors _lineGameColor;
     private bool isFever = false;
+    private Transform _transform;
 
     private void Awake()
     {
         player = GetComponent<Player>();
+        _transform = GetComponent<Transform>();
     }
 
     public void SetIsFever(bool fever)
@@ -21,13 +23,13 @@ public class SnakeTouch : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-
         if (other.CompareTag("ObjectOnRoad"))
         {
             if (IsEatable(other.gameObject) || isFever)
             {
                 // Destroy(other.gameObject);
-                other.gameObject.SetActive(false);
+                // other.gameObject.SetActive(false);
+                other.GetComponent<ObjectOnRoad>().Eaten(_transform);
             }
             else
             {
@@ -36,20 +38,15 @@ public class SnakeTouch : MonoBehaviour
             return;
         }
 
-        if (other.CompareTag("colorLine"))
-        {
-            var colorLine = other.gameObject.GetComponent<ColorLine>();
-            _lineGameColor = colorLine.GetColor();
-            player.SetSnakeColor(_lineGameColor);
-
-            CreatNextBlock();
-        }
+        if (!other.CompareTag("colorLine")) return;
+        var colorLine = other.gameObject.GetComponent<ColorLine>();
+        _lineGameColor = colorLine.GetColor();
+        player.SetSnakeColor(_lineGameColor);
+        CreatNextBlock();
     }
 
     bool IsEatable(GameObject go)
     {
-        //check typ, color
-        //"if" for crystals (need sum of last eaten crystals)
         ObjectOnRoad objectOnRoad = go.GetComponent<ObjectOnRoad>();
         switch (GetObjectType(objectOnRoad))
         {

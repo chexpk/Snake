@@ -5,10 +5,10 @@ using UnityEngine;
 
 public class LookAt : MonoBehaviour
 {
-    public Transform target;
-    private Transform _transform;
-
     [SerializeField] private float offset = 0;
+    [SerializeField] Transform target;
+
+    Transform _transform;
 
     private void Awake()
     {

@@ -6,8 +6,6 @@ using Random = UnityEngine.Random;
 public class BlockController : MonoBehaviour
 {
     [SerializeField] ColorLine colorLine;
-    [SerializeField] List<GameObject> allCrystals = new List<GameObject>();
-    [SerializeField] List<GameObject> allTraps = new List<GameObject>();
 
     [SerializeField] public List<GameObject[]> allHumans = new List<GameObject[]>();
 
@@ -79,24 +77,5 @@ public class BlockController : MonoBehaviour
         }
         while (randomNum == _lineGameColors.GetIndexOfColor());
         return randomNum;
-    }
-
-    // void Restart()
-    // {
-    //     SetRandomColorToLine();
-    //     SetColorToHumans();
-    //     SetActiveToCrystalsAndTraps();
-    // }
-
-    void SetActiveToCrystalsAndTraps()
-    {
-        foreach (var crystal in allCrystals)
-        {
-            crystal.SetActive(true);
-        }
-        foreach (var trap in allTraps)
-        {
-            trap.SetActive(true);
-        }
     }
 }

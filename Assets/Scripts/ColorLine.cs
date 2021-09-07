@@ -5,31 +5,25 @@ using UnityEngine;
 
 public class ColorLine : MonoBehaviour
 {
-    GameColors _lineGameColor;
-    private Renderer _renderer;
     [SerializeField]  ParticleSystem[] particles;
+    GameColors lineGameColor;
+    Renderer _renderer;
 
     private void Awake()
     {
         _renderer = GetComponent<Renderer>();
     }
 
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void SetLineColor(int indexOfColor)
     {
-        _lineGameColor = new GameColors(indexOfColor);
-        _renderer.material.color = _lineGameColor.GetColor();
+        lineGameColor = new GameColors(indexOfColor);
+        _renderer.material.color = lineGameColor.GetColor();
         SetColorToParticles();
+    }
+
+    public GameColors GetColor()
+    {
+        return lineGameColor;
     }
 
     void SetColorToParticles()
@@ -37,12 +31,7 @@ public class ColorLine : MonoBehaviour
         foreach (var ps in particles)
         {
             var main = ps.main;
-            main.startColor = _lineGameColor.GetColor();
+            main.startColor = lineGameColor.GetColor();
         }
-    }
-
-    public GameColors GetColor()
-    {
-        return _lineGameColor;
     }
 }

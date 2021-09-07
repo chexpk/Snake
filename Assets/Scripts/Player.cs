@@ -14,13 +14,13 @@ public class Player : MonoBehaviour
     [SerializeField] private BlocksGenerator blocksGenerator;
     [SerializeField] private UIController uiController;
 
+    public UnityEvent stopMove;
+
     private SnakeTail snakeTail;
     private SnakeControl snakeControl;
     private Renderer _renderer;
     private SnakeTouch snakeTouch;
     private GameColors _snakeGameColor;
-
-    public UnityEvent stopMove;
 
     private int countEatenHumans = 0;
     private int countEatenHumansToIncreaseTail = 0;
@@ -34,7 +34,6 @@ public class Player : MonoBehaviour
         snakeTail = GetComponent<SnakeTail>();
         _renderer = GetComponent<Renderer>();
         snakeTouch = GetComponent<SnakeTouch>();
-
     }
 
     public GameColors GetCurrentColor()
@@ -45,7 +44,6 @@ public class Player : MonoBehaviour
     public void SetIsSnakeMove(bool move)
     {
         snakeControl.SetIsMove(move);
-        // snakeTail.DestroyTail();
     }
     public void SnakeCrashed()
     {
@@ -67,7 +65,6 @@ public class Player : MonoBehaviour
 
     public void IncreaseCountEatenHumans()
     {
-        CreatIncreaseCountText();
         ++countEatenHumans;
         SetCountOfEatenInRowCrystalsToZero();
         CheckIncreaseTail();
@@ -96,6 +93,10 @@ public class Player : MonoBehaviour
         SetCountCrystalsToUi(countEatenCrystals);
     }
 
+    public void UskToCreatNextBlock()
+    {
+        blocksGenerator.CreatBlock();
+    }
 
     void CheckIncreaseTail()
     {
@@ -131,16 +132,8 @@ public class Player : MonoBehaviour
     {
         snakeControl.SetIsFever(false);
         snakeTouch.SetIsFever(false);
-
         SetCountOfEatenInRowCrystalsToZero();
         // SetCountEatenCrystalsToZero();
-    }
-
-    void CreatIncreaseCountText()
-    {
-        //создаю всплывающий текст
-        // var go = Instantiate(Crt);
-        // go.transform.SetParent(canvas.transform);
     }
 
     void SetCountCrystalsToUi(int count)
@@ -161,10 +154,5 @@ public class Player : MonoBehaviour
         countOfEatenInRowCrystals = 0;
         SetCountCrystalsToUi(0);
         SetCountHumansToUi(0);
-    }
-
-    public void UskToCreatNextBlock()
-    {
-        blocksGenerator.CreatBlock();
     }
 }
