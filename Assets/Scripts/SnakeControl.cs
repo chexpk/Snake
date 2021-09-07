@@ -47,8 +47,8 @@ public class SnakeControl : MonoBehaviour
         //     // MoveByRayCast(Input.mousePosition);
         // }
 
-        // MoveByRayCast();
-        Move();
+        MoveByRayCast();
+        // Move();
     }
 
     void MoveByRayCast()

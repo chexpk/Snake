@@ -12,7 +12,7 @@ public class GameColors
         blue,
         yellow,
         magenta,
-        grey,
+        cyan,
         black
     }
 

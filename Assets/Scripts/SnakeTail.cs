@@ -47,7 +47,7 @@ public class SnakeTail : MonoBehaviour
         partOfTail.GetComponent<Renderer>().material.color = _tailGameColor.GetColor();
         //точно transform.up?
         var vector = new Vector3(0, -1, 0);
-        partOfTail.transform.position = _transform.transform.position - _transform.transform.forward * 2;
+        partOfTail.transform.position = _transform.transform.position - _transform.transform.up * 2;
         partOfTail.transform.rotation = _transform.rotation;
         partOfTail.target = _transform.transform;
         partOfTail.targetDistance = 1;

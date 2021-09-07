@@ -7,13 +7,12 @@ using UnityEngine.UIElements;
 
 public class Player : MonoBehaviour
 {
-    public UnityEvent stopMove;
+    [SerializeField] private int feverTime = 5;
+    [SerializeField] private int countOfHumansToIncreaseTail = 4;
+    [SerializeField] private int countOfCrystalsToFever = 3;
 
     [SerializeField] private BlocksGenerator blocksGenerator;
     [SerializeField] private UIController uiController;
-    [SerializeField] private int feverTime = 5;
-    [SerializeField] private int countOfHumansToIncreaseTail = 10;
-    [SerializeField] private int countOfCrystalsToFever = 3;
 
     private SnakeTail snakeTail;
     private SnakeControl snakeControl;
@@ -21,17 +20,13 @@ public class Player : MonoBehaviour
     private SnakeTouch snakeTouch;
     private GameColors _snakeGameColor;
 
+    public UnityEvent stopMove;
+
     private int countEatenHumans = 0;
     private int countEatenHumansToIncreaseTail = 0;
-
     private int countEatenCrystals = 0;
     private int countOfEatenInRowCrystals = 0;
 
-
-    // [SerializeField] private GameObject spawnPointToText;
-    // [SerializeField] private GameObject increaseCountText;
-
-    // Start is called before the first frame update
     void Awake()
     {
         _snakeGameColor = new GameColors(1);
@@ -39,12 +34,6 @@ public class Player : MonoBehaviour
         snakeTail = GetComponent<SnakeTail>();
         _renderer = GetComponent<Renderer>();
         snakeTouch = GetComponent<SnakeTouch>();
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
 
     }
 
@@ -86,14 +75,13 @@ public class Player : MonoBehaviour
         SetCountHumansToUi(countEatenHumans);
     }
 
-    void CheckIncreaseTail()
+    public void RestartSnake(Vector3 basePosition)
     {
-        ++countEatenHumansToIncreaseTail;
-        if (countEatenHumansToIncreaseTail > countOfHumansToIncreaseTail - 1)
-        {
-            IncreaseTail();
-            countEatenHumansToIncreaseTail = 0;
-        }
+        snakeControl.SetPositionToRestart(basePosition);
+        SetIsSnakeMove(true);
+        _snakeGameColor = new GameColors(1);
+        snakeTail.RestartTail();
+        RestartAllCounts();
     }
 
     public void IncreaseCountEatenCrystals()
@@ -106,6 +94,17 @@ public class Player : MonoBehaviour
         }
 
         SetCountCrystalsToUi(countEatenCrystals);
+    }
+
+
+    void CheckIncreaseTail()
+    {
+        ++countEatenHumansToIncreaseTail;
+        if (countEatenHumansToIncreaseTail > countOfHumansToIncreaseTail - 1)
+        {
+            IncreaseTail();
+            countEatenHumansToIncreaseTail = 0;
+        }
     }
 
     void SetCountEatenCrystalsToZero()
@@ -142,15 +141,6 @@ public class Player : MonoBehaviour
         //создаю всплывающий текст
         // var go = Instantiate(Crt);
         // go.transform.SetParent(canvas.transform);
-    }
-
-    public void RestartSnake(Vector3 basePosition)
-    {
-        snakeControl.SetPositionToRestart(basePosition);
-        SetIsSnakeMove(true);
-        _snakeGameColor = new GameColors(1);
-        snakeTail.RestartTail();
-        RestartAllCounts();
     }
 
     void SetCountCrystalsToUi(int count)

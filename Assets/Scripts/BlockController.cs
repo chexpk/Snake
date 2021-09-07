@@ -5,7 +5,6 @@ using Random = UnityEngine.Random;
 
 public class BlockController : MonoBehaviour
 {
-    private GameColors _lineGameColors = new GameColors(5);
     [SerializeField] ColorLine colorLine;
     [SerializeField] List<GameObject> allCrystals = new List<GameObject>();
     [SerializeField] List<GameObject> allTraps = new List<GameObject>();
@@ -20,6 +19,8 @@ public class BlockController : MonoBehaviour
     [SerializeField] private GameObject[] humans5;
     [SerializeField] private GameObject[] humans6;
     [SerializeField] private GameObject[] humans7;
+
+    private GameColors _lineGameColors = new GameColors(5);
 
     private void Awake()
     {
@@ -80,12 +81,12 @@ public class BlockController : MonoBehaviour
         return randomNum;
     }
 
-    void Restart()
-    {
-        SetRandomColorToLine();
-        SetColorToHumans();
-        SetActiveToCrystalsAndTraps();
-    }
+    // void Restart()
+    // {
+    //     SetRandomColorToLine();
+    //     SetColorToHumans();
+    //     SetActiveToCrystalsAndTraps();
+    // }
 
     void SetActiveToCrystalsAndTraps()
     {

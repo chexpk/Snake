@@ -14,6 +14,11 @@ public class SnakeTouch : MonoBehaviour
         player = GetComponent<Player>();
     }
 
+    public void SetIsFever(bool fever)
+    {
+        isFever = fever;
+    }
+
     void OnTriggerEnter(Collider other)
     {
 
@@ -95,11 +100,6 @@ public class SnakeTouch : MonoBehaviour
     void IncreaseCountEatenCrystals()
     {
         player.IncreaseCountEatenCrystals();
-    }
-
-    public void SetIsFever(bool fever)
-    {
-        isFever = fever;
     }
 
     void CreatNextBlock()

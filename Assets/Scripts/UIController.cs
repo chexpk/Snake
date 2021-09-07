@@ -21,23 +21,8 @@ public class UIController : MonoBehaviour
     [Header("StartDisplay")]
     [SerializeField] private GameObject startGO;
 
-    // [SerializeField] private Text totalText;
     private int humans = 0;
     private int crystals = 0;
-
-
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     public void ChangeHumansCountText(int count)
     {
@@ -50,7 +35,6 @@ public class UIController : MonoBehaviour
         crystalsCountText.text = count.ToString();
         crystals = count;
     }
-
 
     public void ShowRestartDisplay(bool show)
     {
@@ -70,15 +54,14 @@ public class UIController : MonoBehaviour
         }
     }
 
-    void ShowGameDisplayCounts(bool show)
-    {
-        humansCountGO.SetActive(show);
-        crystalsCountGO.SetActive(show);
-    }
-
     public void HideStartDisplay()
     {
         startGO.SetActive(false);
     }
 
+    void ShowGameDisplayCounts(bool show)
+    {
+        humansCountGO.SetActive(show);
+        crystalsCountGO.SetActive(show);
+    }
 }
